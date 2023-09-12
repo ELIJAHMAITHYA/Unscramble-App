@@ -115,8 +115,10 @@ fun GameStatus(score: Int, modifier: Modifier = Modifier) {
 
 @Composable
 fun GameLayout(
+    onUserGuessChanged: (String) -> Unit,
+    onKeyboardDone: () -> Unit,
     currentScrambledWord: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val mediumPadding = dimensionResource(R.dimen.padding_medium)
 
@@ -159,15 +161,15 @@ fun GameLayout(
                     unfocusedContainerColor = colorScheme.surface,
                     disabledContainerColor = colorScheme.surface,
                 ),
-                onValueChange = { },
+                onValueChange = onUserGuessChanged,
                 label = { Text(stringResource(R.string.enter_your_word)) },
                 isError = false,
                 keyboardOptions = KeyboardOptions.Default.copy(
                     imeAction = ImeAction.Done
                 ),
                 keyboardActions = KeyboardActions(
-                    onDone = { }
-                )
+                    onDone = { onKeyboardDone() }
+                ),
             )
         }
     }
