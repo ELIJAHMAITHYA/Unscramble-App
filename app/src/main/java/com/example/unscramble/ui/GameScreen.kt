@@ -61,11 +61,10 @@ fun GameScreen(
         )
 
         GameLayout(
+            userGuess = gameViewModel.userGuess,
+            onUserGuessChanged = { gameViewModel.updateUserGuess(it) },
+            onKeyboardDone = { },
             currentScrambledWord = gameUiState.currentScrambledWord,
-            modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentHeight()
-                .padding(mediumPadding)
         )
         Column(
             modifier = Modifier
@@ -117,6 +116,7 @@ fun GameStatus(score: Int, modifier: Modifier = Modifier) {
 fun GameLayout(
     onUserGuessChanged: (String) -> Unit,
     onKeyboardDone: () -> Unit,
+    userGuess: String,
     currentScrambledWord: String,
     modifier: Modifier = Modifier,
 ) {
@@ -152,7 +152,7 @@ fun GameLayout(
                 style = typography.titleMedium
             )
             OutlinedTextField(
-                value = "",
+                value = userGuess,
                 singleLine = true,
                 shape = shapes.large,
                 modifier = Modifier.fillMaxWidth(),
