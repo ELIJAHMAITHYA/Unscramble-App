@@ -12,10 +12,6 @@ import kotlinx.coroutines.flow.asStateFlow
 class GameViewModel : ViewModel() {
 
     var userGuess by mutableStateOf("")
-        private set
-//  private val _uiState = MutableStateFlow(GameUiState())
-// Backing property to avoid state updates from other classes
-
     private val _uiState = MutableStateFlow(GameUiState())
     val uiState: StateFlow<GameUiState> = _uiState.asStateFlow()
 
