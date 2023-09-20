@@ -8,13 +8,14 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import com.example.unscramble.data.allWords
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 
 class GameViewModel : ViewModel() {
 
     var userGuess by mutableStateOf("")
+        private set
     private val _uiState = MutableStateFlow(GameUiState())
     val uiState: StateFlow<GameUiState> = _uiState.asStateFlow()
-
 
     // Set of words used in the game
     private var usedWords: MutableSet<String> = mutableSetOf()
@@ -44,12 +45,27 @@ class GameViewModel : ViewModel() {
         usedWords.clear()
         _uiState.value = GameUiState(currentScrambledWord = pickRandomWordAndShuffle())
     }
-init {
-    resetGame()
-}
-    fun updateUserGuess(guessedWord: String){
+
+    init {
+        resetGame()
+    }
+
+    fun updateUserGuess(guessedWord: String) {
         userGuess = guessedWord
     }
 
-}
+    fun checkUserGuess() {
+
+        if (userGuess.equals(currentWord, ignoreCase = true)) {
+        } else {
+            // User's guess is wrong, show an error
+            _uiState.update { currentState ->
+                currentState.copy(isGuessedWordWrong = true)
+            }
+            // Reset user guess
+            updateUserGuess("")
+        }
+
+    }
+    }
 
