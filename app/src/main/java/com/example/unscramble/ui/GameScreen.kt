@@ -45,7 +45,7 @@ import com.example.unscramble.ui.theme.UnscrambleTheme
 fun GameScreen(
     gameViewModel: GameViewModel = viewModel(),
 
-) {
+    ) {
     val mediumPadding = dimensionResource(R.dimen.padding_medium)
     val gameUiState by gameViewModel.uiState.collectAsState()
     Column(
@@ -64,7 +64,7 @@ fun GameScreen(
         GameLayout(
             userGuess = gameViewModel.userGuess,
             onUserGuessChanged = { gameViewModel.updateUserGuess(it) },
-            onKeyboardDone = { gameViewModel.checkUserGuess()},
+            onKeyboardDone = { gameViewModel.checkUserGuess() },
             currentScrambledWord = gameUiState.currentScrambledWord,
             isGuessWrong = gameUiState.isGuessedWordWrong,
             wordCount = gameUiState.currentWordCount,
@@ -97,7 +97,12 @@ fun GameScreen(
                 )
             }
         }
-
+        if (gameUiState.isGameOver) {
+            FinalScoreDialog(
+                score = gameUiState.score,
+                onPlayAgain = { gameViewModel.resetGame() }
+            )
+        }
         GameStatus(score = gameUiState.score, modifier = Modifier.padding(20.dp))
     }
 }
@@ -202,10 +207,10 @@ private fun FinalScoreDialog(
         onDismissRequest = {
             // Dismiss the dialog when the user clicks outside the dialog or on the back
             // button. If you want to disable that functionality, simply use an empty
-            // onCloseRequest.
+            // onDismissRequest.
         },
-        title = { Text(text = stringResource(R.string.congratulations)) },
-        text = { Text(text = stringResource(R.string.you_scored, score)) },
+        title = { Text(stringResource(R.string.congratulations)) },
+        text = { Text(stringResource(R.string.you_scored, score)) },
         modifier = modifier,
         dismissButton = {
             TextButton(
@@ -217,7 +222,11 @@ private fun FinalScoreDialog(
             }
         },
         confirmButton = {
-            TextButton(onClick = onPlayAgain) {
+            TextButton(
+                onClick = {
+                    onPlayAgain()
+                }
+            ) {
                 Text(text = stringResource(R.string.play_again))
             }
         }
